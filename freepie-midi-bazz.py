@@ -9,36 +9,36 @@ def update():
             # It's either a Note On or a Note Off msg! (NoteOff is NoteOn with velocity 0)
             key = 0
             # Down
-            if midi[0].data.buffer[0] == 24: # C-1
+            if midi[0].data.buffer[0] == (24+12+12+12): # C-1
                 key = Key.DownArrow
             # Up
-            if midi[0].data.buffer[0] == 31: 
-                key = Key.UpArrow # G-1
+            if midi[0].data.buffer[0] == (35+12+12+12): 
+                key = Key.UpArrow # B-1
             # Left
-            if midi[0].data.buffer[0] == 26:
-                key = Key.LeftArrow # D-1
+            if midi[0].data.buffer[0] == (28+12+12+12):
+                key = Key.LeftArrow # E-1
             # Right
-            if midi[0].data.buffer[0] == 28:
-                key = Key.RightArrow # E-1
+            if midi[0].data.buffer[0] == (31+12+12+12):
+                key = Key.RightArrow # G-1
 
             # B
-            if midi[0].data.buffer[0] == (24+12):
+            if midi[0].data.buffer[0] == (24+12+12+12+12):
                 key = Key.Z # C-2
             # A
-            if midi[0].data.buffer[0] == (26+12):
-                key = Key.X # D-2
+            if midi[0].data.buffer[0] == (28+12+12+12+12):
+                key = Key.X # E-2
             # Y
-            if midi[0].data.buffer[0] == (25+12):
-                key = Key.A # C#2
+            if midi[0].data.buffer[0] == (26+12+12+12+12):
+                key = Key.A # D-2
             # X
-            if midi[0].data.buffer[0] == (27+12):
-                key = Key.S # D#2
+            if midi[0].data.buffer[0] == (29+12+12+12+12):
+                key = Key.S # F-2
             # L
-            if midi[0].data.buffer[0] == (28+12):
-                key = Key.Q # E-2
+            if midi[0].data.buffer[0] == (31+12+12+12+12):
+                key = Key.Q # G-2
             # R
-            if midi[0].data.buffer[0] == (29+12):
-                key = Key.W # F-2
+            if midi[0].data.buffer[0] == (35+12+12+12+12):
+                key = Key.W # B-2
             # Select
             if midi[0].data.buffer[0] == 21:
                 key = Key.E # A-0
