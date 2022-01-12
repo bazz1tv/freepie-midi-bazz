@@ -1,0 +1,92 @@
+LED MIDI Guitar Chain
+=====================
+
+
+               6 audio signals                                  
+ -------------  13-pin cable   ---------------   (MIDI)     ------------------   (USB)     -----------------------------
+| Midi Guitar | ---------->---| Roland GI-10  | ---------> | Yamaha XS8 Synth | --------> |            PC               |
+ -------------                 ---------------              ------------------            |                             |
+                                                                                          | freePie: Midi -> keypresses |
+                                                                                          |                             |
+                                                                                          | Emulator: Keypresses        |
+                                                                                           -----------------------------
+
+
+
+
+
+ PC Internals
+ ============
+
+freePIE - Maps MIDI signals to keyboard presses. (Can also map to joypads)
+
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+This alone does not convey which strings the MIDI notes came from. Unfortunately, there's no known way
+to modify the Roland GI10 firmware to add custom MIDI messages conveying this information. So here's what
+I'm coming up with:
+                       -----------------------------------------------------
+                      |                                                     |
+Midi Guitar (IN)   ->-| (Roland 13-Pin Connector) ->-- Fanout to 6 Mono     |
+                      |            |                    |  |  |  |  |  |    |      ------------
+                      |            v                    |  |  |  |  |   \-- | ->- |            |
+                      |       ----------                |  |  |  |   \----- | ->- |            |    ----
+                      |      |  buffer? |               |  |  |   \-------- | ->- |  Audio     |->-| PC |
+                      |       ----------                |  |   \----------- | ->- | Interface  |    ----
+                      |            |                    |   \-------------- | ->- |            |
+                      |            v                     \----------------- | ->- |            |
+Roland GI-10 (OUT) -<-| (Roland 13-Pin Connector)                           |      ------------
+                      |                                                     |
+                       -----------------------------------------------------
+
+
+Bill of Materials
+-----------------
+2 Roland 13-pin female connectors (DIN-13)
+6 mono audio jacks
+enclosure
+(Order another Roland MIDI cable)
+
+
+The PC will be receiving guitar MIDI data from Roland GI10, as well as the audio signals of the 6 strings
+over the audio interface.
+
+New Software program: Analyzes the incoming MIDI data in addition to the audio signals, to deduce which
+string and which fret the note came from.
+
+
+
+
+
+
+                                                                           The BAZZTARD
+               6 audio signals                         -----------------------------------------------------                                  
+ -------------  13-pin cable                          |                                                     |                                 
+| Midi Guitar | ---------->---  Midi Guitar (IN)   ->-| (Roland 13-Pin Connector) ->-- Fanout to 6 Mono     |                                 
+ -------------                                        |            |                    |  |  |  |  |  |    |      ------------               
+                                                      |            v                    |  |  |  |  |   \-- | ->- |            |              
+                                                      |       ----------                |  |  |  |   \----- | ->- |            |      ----      
+                                                      |      |  buffer? |               |  |  |   \-------- | ->- |  Audio     |-->--| PC |     
+                                                      |       ----------                |  |   \----------- | ->- | Interface  |      ----      
+                                                      |            |                    |   \-------------- | ->- |            |                                                                                                          
+                                                      |            v                     \----------------- | ->- |            |                                                                                                          
+                              - Roland GI-10 (OUT) -<-| (Roland 13-Pin Connector)                           |      ------------                                                                                                                            
+                             /                        |                                                     |                                                                                                                        
+                            |                          -----------------------------------------------------                                                                                                                        
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |                                                                                                                           
+                            v                                                                                                                          
+                     ---------------   (MIDI)     ------------------   (USB)     -----------------------------
+                    | Roland GI-10  | ---------> | Yamaha XS8 Synth | --------> |            PC               |
+                     ---------------              ------------------            |                             |
+                                                                                | freePie: Midi -> keypresses |
+                                                                                |                             |
+                                                                                | Emulator: Keypresses        |
+                                                                                 -----------------------------

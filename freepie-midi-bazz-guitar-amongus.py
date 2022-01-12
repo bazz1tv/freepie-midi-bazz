@@ -10,23 +10,28 @@ def update():
             key = 0
             # Down
             if midi[2].data.buffer[0] == (22+12+12+12) or midi[2].data.buffer[0] == (21+12+12+12): # A-1
-                key = Key.DownArrow
+                key = Key.S
             # Up
             if midi[2].data.buffer[0] == (24+12+12+12) or midi[2].data.buffer[0] == (23+12+12+12): 
-                key = Key.UpArrow # A#1
+                key = Key.W # A#1
             # Left
             if midi[2].data.buffer[0] == (26+12+12+12):
-                key = Key.LeftArrow # D-1
+                key = Key.A # D-1
             # Right
             if midi[2].data.buffer[0] == (28+12+12+12):
-                key = Key.RightArrow # E-1
+                key = Key.D # E-1
+            # kill     
+            if midi[2].data.buffer[0] == (31+12+12+12):
+                key = Key.Q # E-1
+            if midi[2].data.buffer[0] == (27+12+12+12):
+                key = Key.R # A#1			
 
             # B
             if midi[2].data.buffer[0] == (28+12+12) or midi[2].data.buffer[0] == (30+12+12):
                 key = Key.Z # E-0
             # A
             if midi[2].data.buffer[0] == (33+12+12+12) or midi[2].data.buffer[0] == (31+12+12+12):
-                key = Key.X # E-2
+                key = Key.Space # E-2
             # Y
             if midi[2].data.buffer[0] == (26+12+12+12+12):
                 key = Key.A # D-2
