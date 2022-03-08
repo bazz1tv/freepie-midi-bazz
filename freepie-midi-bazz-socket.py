@@ -1,26 +1,36 @@
 import threading
 import socket
 
-
 def TCPServer():
-    global globalVar
+    global ignoreInput, s, conn
     diagnostics.debug("In TCP Server");
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
-    s.bind(("127.0.0.1", 8084));
-    s.listen(60)
-    conn, addr = s.accept()
-    diagnostics.debug("Connected by {0}", addr)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind(("127.0.0.1", 8097));
+    s.listen(1)
     while True:
-        data = conn.recv(1024)
-        diagnostics.debug(data)
-        if not data:
-            break
-        conn.sendall(data)
+        conn, addr = s.accept()
+        diagnostics.debug("Connected by {0}", addr)
+        while True:
+            data = conn.recv(1024)
+            diagnostics.debug(data)
+            
+            if data == "1":
+            	ignoreInput = False
+            elif data == "2":
+            	ignoreInput = True
+            diagnostics.debug("[THREAD] ignoreInput = {0}", ignoreInput);
+            
+            if not data:
+            	diagnostics.debug("Closing connection")
+            	conn.shutdown(socket.SHUT_RDWR);
+                conn.close()
+                break
+            conn.sendall(data)
 
 def update():
-    global globalVar
-    with lock:
-    	var = globalVar
+    global ignoreInput
+    #diagnostics.debug("[UPDATE] ignoreInput = {0}", ignoreInput);
     
     #diagnostics.debug("globalVar = {0}", globalVar);
     diagnostics.watch(midi[2].data.channel); 	# midi channel
@@ -28,7 +38,7 @@ def update():
     diagnostics.watch(midi[2].data.buffer[0]);	# eg. note value
     diagnostics.watch(midi[2].data.buffer[1]);	# eg. velocity
     
-    if midi[2].data.channel == 0:
+    if ignoreInput != True and midi[2].data.channel == 0:
         if midi[2].data.status == MidiStatus.NoteOn:
             # It's either a Note On or a Note Off msg! (NoteOff is NoteOn with velocity 0)
             key = 0
@@ -80,12 +90,26 @@ def update():
 
 
 if starting:
+    global ignoreInput, s, conn, t1
+    conn = None;
+    s = None;
+    ignoreInput = False
+
     midi[2].update += update
     # Middle C = 60
     # lowest C = 24
     diagnostics.debug("Starting file");
-    globalVar = 0
     lock = threading.Lock()
     t1 = threading.Thread(target=TCPServer,args=());
-    t1.start(); 
+    t1.daemon = True
+    t1.start();
+    
+if stopping:
+	global conn, s, t1
+	diagnostics.debug("STOPPING")
+	if conn != None:
+		conn.shutdown(socket.SHUT_RDWR);
+		conn.close();
+	#s.shutdown(socket.SHUT_RDWR);
+	s.close();
   
