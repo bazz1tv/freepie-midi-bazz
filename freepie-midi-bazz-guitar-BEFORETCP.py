@@ -1,20 +1,6 @@
-import threading
-import time
 
 
-def TCPServer():
-	global globalVar
-	diagnostics.debug("Started Func");
-	while True:
-		with lock:
-			globalVar = 1
-
-def update():
-    global globalVar
-    with lock:
-    	var = globalVar
-    
-    diagnostics.debug("globalVar = {0}", globalVar);
+def update():  
     diagnostics.watch(midi[2].data.channel); 	# midi channel
     diagnostics.watch(midi[2].data.status);		# eg. NoteON
     diagnostics.watch(midi[2].data.buffer[0]);	# eg. note value
@@ -75,9 +61,3 @@ if starting:
     midi[2].update += update
     # Middle C = 60
     # lowest C = 24
-    diagnostics.debug("Starting file");
-    globalVar = 0
-    lock = threading.Lock()
-    t1 = threading.Thread(target=TCPServer,args=());
-    t1.start(); 
-  

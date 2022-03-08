@@ -23,10 +23,10 @@ def update():
 
             # B
             if midi[2].data.buffer[0] == (28+12+12+12) or midi[2].data.buffer[0] == (30+12+12+12):
-                key = Key.Z # E-0
+                key = Key.Z # E-0, Dstring-14th fret or 16th fret
             # A
             if midi[2].data.buffer[0] == (33+12+12+12+12) or midi[2].data.buffer[0] == (31+12+12+12+12):
-                key = Key.X # E-2
+                key = Key.X # E-2, 1st string-15th fret or 17th fret, 
             # Y
             if midi[2].data.buffer[0] == (26+12+12+12+12+12):
                 key = Key.A # D-2
@@ -49,7 +49,7 @@ def update():
             # if we got a key we're interested in, process it
             if key != 0:
                 if midi[2].data.buffer[1] != 0:
-                	diagnostics.debug("NoteOn: {0}, {1}", midi[2].data.buffer[0], midi[2].data.buffer[1])
+                	diagnostics.debug("NoteOn: {0}, {1}, Key: {2}", midi[2].data.buffer[0], midi[2].data.buffer[1], key)
                 	keyboard.setKeyDown(key)
                 else:  # Key Off
                     diagnostics.debug("NoteOff")
