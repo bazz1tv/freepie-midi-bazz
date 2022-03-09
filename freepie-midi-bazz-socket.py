@@ -15,9 +15,9 @@ def TCPServer():
             data = conn.recv(1024)
             diagnostics.debug(data)
             
-            if data == "1":
+            if data == "ignoreInputFalse":
             	ignoreInput = False
-            elif data == "2":
+            elif data == "ignoreInputTrue":
             	ignoreInput = True
             diagnostics.debug("[THREAD] ignoreInput = {0}", ignoreInput);
             
@@ -25,6 +25,7 @@ def TCPServer():
             	diagnostics.debug("Closing connection")
             	conn.shutdown(socket.SHUT_RDWR);
                 conn.close()
+                conn = None
                 break
             conn.sendall(data)
 
